@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Com &amp; Con</string>
+    <string name="title">Kommunikation und Nebenläufigkeit</string>
+    <string name="intro">HSLU Mobile Programming</string>
+    <string name="intro_multi">Nebenläufigkeit (Threads &amp; Worker)</string>
+    <string name="gui_block">GUI 7 Sekunden blockieren</string>
+    <string name="demo_thread_start">DEMO-THREAD starten</string>
+    <string name="demo_worker_start">DEMO-WORKER starten</string>
+    <string name="intro_com">Kommunikation (HTTP &amp; JSON)</string>
+    <string name="server_request">Server-Anfrage starten</string>
+    <string name="reset_ViewModel">View Model zurücksetzen</string>
+    <string name="show_Bands">Zeige Band-Auswahl an</string>
+</resources>
