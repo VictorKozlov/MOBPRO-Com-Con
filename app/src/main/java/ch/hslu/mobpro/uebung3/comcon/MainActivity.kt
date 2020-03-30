@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val btnDemo = findViewById<Button>(R.id.btn_thread_start)
         val btnWorker = findViewById<Button>(R.id.btn_worker_start)
         val btnRequest = findViewById<Button>(R.id.btn_get_json)
+        val btnResetViewModel = findViewById<Button>(R.id.btn_reset_view_model)
 
         btnBlock.setOnClickListener {
             freeze7Seconds(it)
@@ -43,11 +44,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             startDemoWorker(it)
         }
 
-        btnDemo.setOnClickListener(this::startDemoThread)
+        btnResetViewModel.setOnClickListener{
+            bandsViewModel.reset()
+        }
 
         btnRequest.setOnClickListener(){
             bandsViewModel.getBands();
         }
+
+        btnDemo.setOnClickListener(this::startDemoThread)
 
         bandsViewModel.bands.observe( this, Observer {
             main_nubmer_of_bands.text = "#Bands = ${bandsViewModel.bands.value?.size}" }

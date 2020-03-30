@@ -12,4 +12,5 @@
     <string name="show_Bands">Zeige Band-Auswahl an</string>
     <string name="title_communication">Kommunikation (HTTP / JSON)</string>
     <string name="btn_start_server_reqest">Server-Anfrage starten</string>
+    <string name="btn_reset_view_model">ViewModel zurücksetzen</string>
 </resources>

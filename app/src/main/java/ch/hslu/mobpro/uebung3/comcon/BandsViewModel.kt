@@ -40,4 +40,8 @@ class BandsViewModel : ViewModel() {
             }
         })
     }
+
+    fun reset() {
+        bands.value = emptyList()
+    }
 }

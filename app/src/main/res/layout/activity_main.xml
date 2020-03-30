@@ -69,6 +69,12 @@
                 android:text="@string/btn_start_server_reqest"
                 android:id="@+id/btn_get_json" />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_reset_view_model"
+                android:id="@+id/btn_reset_view_model" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
