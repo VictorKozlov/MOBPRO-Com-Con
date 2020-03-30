@@ -25,39 +25,28 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val WAITING_TIME_MILIS: Long = 7000
     private var demoThread: Thread = createDemoThread()
     private val bandsViewModel: BandsViewModel by viewModels()
-    private var bandCount: Int = 0
-    private val url = "https://wherever.ch/hslu/rock-bands/"
-    private var retrofit = Retrofit.Builder()
-        .client(OkHttpClient().newBuilder().build())
-        .addConverterFactory(MoshiConverterFactory.create())
-        .baseUrl(url)
-        .build()
-    private val bandsService = retrofit.create(BandApiService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val btnBlock = findViewById<Button>(R.id.btn_gui_block)
+        val btnDemo = findViewById<Button>(R.id.btn_thread_start)
+        val btnWorker = findViewById<Button>(R.id.btn_worker_start)
+        val btnRequest = findViewById<Button>(R.id.btn_get_json)
 
         btnBlock.setOnClickListener {
             freeze7Seconds(it)
         }
 
-        val btnDemo = findViewById<Button>(R.id.btn_thread_start)
-
-        btnDemo.setOnClickListener(this::startDemoThread)
-
-        val btnWorker = findViewById<Button>(R.id.btn_worker_start)
-
         btnWorker.setOnClickListener {
             startDemoWorker(it)
         }
 
-        val btnRequest = findViewById<Button>(R.id.btn_get_json)
+        btnDemo.setOnClickListener(this::startDemoThread)
 
         btnRequest.setOnClickListener(){
-            getBands();
+            bandsViewModel.getBands();
         }
 
         bandsViewModel.bands.observe( this, Observer {
@@ -70,7 +59,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         try {
             Thread.sleep(WAITING_TIME_MILIS)
         } catch (e: InterruptedException) {
-            Toast.makeText(this, "Dehler beim freeze", Toast.LENGTH_LONG)
+            Toast.makeText(this, "Freeze wurde abgebrochen", Toast.LENGTH_LONG)
         }
     }
 
@@ -110,23 +99,5 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 )
                 .build()
         workManager.enqueue(demoWorkerRequest)
-    }
-
-    fun getBands(){
-        val call = bandsService.getBands()
-        call.enqueue(object : Callback<List<BandCode>> {
-            override fun onResponse(
-                call: Call<List<BandCode>>,
-                response: Response<List<BandCode>>
-            ) {
-                if(response.code() == HttpURLConnection.HTTP_OK){
-                    bandsViewModel.bands.value = response.body().orEmpty()
-                }
-            }
-
-            override fun onFailure(call: Call<List<BandCode>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "JSON Wurde nicht geladen", Toast.LENGTH_LONG)
-            }
-        })
     }
 }
