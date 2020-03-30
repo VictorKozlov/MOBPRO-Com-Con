@@ -10,4 +10,6 @@
     <string name="server_request">Server-Anfrage starten</string>
     <string name="reset_ViewModel">View Model zurücksetzen</string>
     <string name="show_Bands">Zeige Band-Auswahl an</string>
+    <string name="title_communication">Kommunikation (HTTP / JSON)</string>
+    <string name="btn_start_server_reqest">Server-Anfrage starten</string>
 </resources>

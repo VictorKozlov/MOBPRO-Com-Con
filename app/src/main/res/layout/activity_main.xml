@@ -56,7 +56,25 @@
                 android:text="@string/demo_worker_start"
                 android:id="@+id/btn_worker_start" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_communication"
+                android:textSize="18dp"
+                android:background="@color/yellow" />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_start_server_reqest"
+                android:id="@+id/btn_get_json" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_nubmer_of_bands"
+                android:textSize="18dp"
+                android:background="@color/white" />
         </LinearLayout>
     </ScrollView>
 
