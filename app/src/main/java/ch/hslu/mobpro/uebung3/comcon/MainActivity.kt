@@ -4,59 +4,95 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import java.lang.Exception
-import java.net.HttpURLConnection
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val WAITING_TIME_MILIS: Long = 7000
     private var demoThread: Thread = createDemoThread()
     private val bandsViewModel: BandsViewModel by viewModels()
+    private var btnBlock:Button? = null
+    private var btnDemo:Button? = null
+    private var btnWorker:Button? = null
+    private var btnRequest:Button? = null
+    private var btnResetViewModel:Button? = null
+    private var btnChooseband:Button? = null
+    private var imageView:ImageView? = null
+    private var txtBandInfo:TextView? = null
+    private var txtBandName:TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnBlock = findViewById<Button>(R.id.btn_gui_block)
-        val btnDemo = findViewById<Button>(R.id.btn_thread_start)
-        val btnWorker = findViewById<Button>(R.id.btn_worker_start)
-        val btnRequest = findViewById<Button>(R.id.btn_get_json)
-        val btnResetViewModel = findViewById<Button>(R.id.btn_reset_view_model)
+        btnBlock = findViewById<Button>(R.id.btn_gui_block)
+        btnDemo = findViewById<Button>(R.id.btn_thread_start)
+        btnWorker = findViewById<Button>(R.id.btn_worker_start)
+        btnRequest = findViewById<Button>(R.id.btn_get_json)
+        btnResetViewModel = findViewById<Button>(R.id.btn_reset_view_model)
+        btnChooseband = findViewById<Button>(R.id.btn_choose_band)
+        imageView = findViewById<ImageView>(R.id.img_band_picture)
+        txtBandInfo = findViewById<TextView>(R.id.main_current_band_info)
+        txtBandName = findViewById<TextView>(R.id.main_current_band_name)
 
-        btnBlock.setOnClickListener {
+        imageView?.isVisible = false
+        txtBandInfo?.isVisible = false
+        txtBandName?.isVisible = false
+
+        btnBlock?.setOnClickListener {
             freeze7Seconds(it)
         }
 
-        btnWorker.setOnClickListener {
-            startDemoWorker(it)
+        btnWorker?.setOnClickListener {
+            startDemoWorker()
         }
 
-        btnResetViewModel.setOnClickListener{
-            bandsViewModel.reset()
+        btnResetViewModel?.setOnClickListener{
+            bandsViewModel.resetViewModel()
         }
 
-        btnRequest.setOnClickListener(){
+        btnRequest?.setOnClickListener(){
             bandsViewModel.getBands();
         }
 
-        btnDemo.setOnClickListener(this::startDemoThread)
+        btnChooseband?.setOnClickListener(){
+            chooseBand();
+        }
 
-        bandsViewModel.bands.observe( this, Observer {
-            main_nubmer_of_bands.text = "#Bands = ${bandsViewModel.bands.value?.size}" }
+        btnDemo?.setOnClickListener(this::startDemoThread)
+
+        bandsViewModel.bands?.observe( this, Observer {
+            main_nubmer_of_bands.text = "#Bands = ${bandsViewModel.bands?.value?.size}" }
         )
+
+        bandsViewModel.currentBand?.observe(this, Observer {
+
+            imageView?.isVisible = true
+            txtBandInfo?.isVisible = true
+            txtBandName?.isVisible = true
+            main_current_band_name.text = "${bandsViewModel.currentBand?.value?.name}"
+            main_current_band_info.text = "${bandsViewModel.currentBand?.value?.homeCountry}, Gründung: ${bandsViewModel.currentBand?.value?.foundingYear}"
+            Picasso.get().load(bandsViewModel.currentBand?.value?.bestOfCdCoverImageUrl).into(imageView)
+            }
+        )
+    }
+
+    private fun chooseBand() {
+/*        var builder = AlertDialog.Builder(this)
+        builder.setTitle("Wählen Sie eine Band aus")
+        val bandsToChoose: ArrayList<String>? = null*/
+        bandsViewModel.getCurrentBand("ff")
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -94,7 +130,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     @Suppress("UNUSED_PARAMETERS")
-    fun startDemoWorker(v: View?) {
+    fun startDemoWorker() {
         val workManager = WorkManager.getInstance(application)
         val demoWorkerRequest = OneTimeWorkRequestBuilder<DemoWorker>()
                 .setInputData(

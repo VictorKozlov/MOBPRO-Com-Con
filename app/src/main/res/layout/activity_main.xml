@@ -81,6 +81,34 @@
                 android:id="@+id/main_nubmer_of_bands"
                 android:textSize="18dp"
                 android:background="@color/white" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_choose_band"
+                android:id="@+id/btn_choose_band" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_current_band_name"
+                android:textSize="18dp"
+                android:background="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_current_band_info"
+                android:textSize="18dp"
+                android:background="@color/white" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img_band_picture">
+
+            </ImageView>
+
+
         </LinearLayout>
     </ScrollView>
 
