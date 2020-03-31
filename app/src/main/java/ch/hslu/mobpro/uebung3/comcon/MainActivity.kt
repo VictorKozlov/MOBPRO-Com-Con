@@ -3,6 +3,8 @@ package ch.hslu.mobpro.uebung3.comcon
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private var txtBandInfo:TextView? = null
     private var txtBandName:TextView? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -46,9 +49,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         txtBandInfo = findViewById<TextView>(R.id.main_current_band_info)
         txtBandName = findViewById<TextView>(R.id.main_current_band_name)
 
-        imageView?.isVisible = false
-        txtBandInfo?.isVisible = false
-        txtBandName?.isVisible = false
+        makeUnvisible()
 
         btnBlock?.setOnClickListener {
             freeze7Seconds(it)
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         btnResetViewModel?.setOnClickListener{
             bandsViewModel.resetViewModel()
+            makeUnvisible()
         }
 
         btnRequest?.setOnClickListener(){
@@ -77,10 +79,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         )
 
         bandsViewModel.currentBand?.observe(this, Observer {
-
-            imageView?.isVisible = true
-            txtBandInfo?.isVisible = true
-            txtBandName?.isVisible = true
+            makeVisible()
             main_current_band_name.text = "${bandsViewModel.currentBand?.value?.name}"
             main_current_band_info.text = "${bandsViewModel.currentBand?.value?.homeCountry}, Gründung: ${bandsViewModel.currentBand?.value?.foundingYear}"
             Picasso.get().load(bandsViewModel.currentBand?.value?.bestOfCdCoverImageUrl).into(imageView)
@@ -88,11 +87,28 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         )
     }
 
+    private fun makeVisible(){
+        imageView?.visibility = VISIBLE
+        txtBandInfo?.visibility = VISIBLE
+        txtBandName?.visibility = VISIBLE
+    }
+
+    private fun makeUnvisible(){
+        imageView?.visibility = GONE
+        txtBandInfo?.visibility = GONE
+        txtBandName?.visibility = GONE
+    }
+
     private fun chooseBand() {
-/*        var builder = AlertDialog.Builder(this)
+        bandsViewModel.getBands()
+        var builder = AlertDialog.Builder(this)
+        val bandsToChoose: Array<String>? = bandsViewModel.getArrayListBands()
         builder.setTitle("Wählen Sie eine Band aus")
-        val bandsToChoose: ArrayList<String>? = null*/
-        bandsViewModel.getCurrentBand("ff")
+        builder?.setItems(bandsToChoose) {_,which ->
+             bandsViewModel.getCurrentBand(bandsViewModel.bands?.value?.get(which)?.code)
+        }
+        builder.create()
+        builder.show()
     }
 
     @Suppress("UNUSED_PARAMETER")

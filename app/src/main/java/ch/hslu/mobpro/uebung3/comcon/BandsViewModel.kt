@@ -44,22 +44,28 @@ class BandsViewModel : ViewModel() {
         })
     }
 
-    fun getCurrentBand(code: String){
-        bandsService?.getCurrentBand(code)?.enqueue(object : Callback<BandInfo> {
-            override fun onResponse(call: Call<BandInfo>, response: Response<BandInfo>) {
-                if(response.code() == HttpURLConnection.HTTP_OK){
-                     currentBand?.value = response.body()
+    fun getCurrentBand(code: String?){
+        if (code != null) {
+            bandsService?.getCurrentBand(code)?.enqueue(object : Callback<BandInfo> {
+                override fun onResponse(call: Call<BandInfo>, response: Response<BandInfo>) {
+                    if(response.code() == HttpURLConnection.HTTP_OK){
+                        currentBand?.value = response.body()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<BandInfo>, t: Throwable) {
-                throw Exception("Failed to load JSON")
-            }
-        })
+                override fun onFailure(call: Call<BandInfo>, t: Throwable) {
+                    throw Exception("Failed to load JSON")
+                }
+            })
+        }
     }
 
     fun resetViewModel() {
         bands?.value = emptyList()
         currentBand?.value = BandInfo("", emptyList(), 0, "", null) ;
+    }
+
+    fun getArrayListBands(): Array<String>?{
+        return bands?.value?.map { bandCode -> bandCode.name }?.toTypedArray()
     }
 }
